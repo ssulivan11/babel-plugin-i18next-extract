@@ -25,9 +25,9 @@
   },
   "author": "",
   "license": "MIT",
-  "main": "./index.js",
+  "main": "./lib/index.js",
   "module": "./es/index.js",
-  "types": "./index.d.ts",
+  "types": "./lib/index.d.ts",
   "files": [
     "*"
   ],
