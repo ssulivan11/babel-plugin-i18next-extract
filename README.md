@@ -1,6 +1,15 @@
+# babel-plugin-i18next-extract-no-warnings
+
+- v0.8.3 fork with exit code on extraction error, no warnings allowed
+- published for usage
+
+---
+
 <!-- {% if false %} -->
 <!-- Don't render this in actual documentation -->
+
 ![Logo](./docs/assets/imgs/babel-plugin-i18next-extract.png)
+
 <!-- {% endif %} -->
 
 # babel-plugin-i18next-extract
@@ -25,10 +34,8 @@ traverse your Javascript/Typescript code in order to find i18next translation ke
 - ✅ Plurals support.
 - ✅ Contexts support.
 - ✅ Namespace detection.
-- ✅ Disable extraction on a specific file sections or lines using [comment hints](
-  https://i18next-extract.netlify.com/#/comment-hints?id=disable-extraction-on-a-specific-line-or-code-section).
-- ✅ Overwrite namespaces, plurals and contexts on-the-fly using [comment hints](
-  https://i18next-extract.netlify.com/#/comment-hints?id=explicitly-specify-contexts-for-a-key).
+- ✅ Disable extraction on a specific file sections or lines using [comment hints](https://i18next-extract.netlify.com/#/comment-hints?id=disable-extraction-on-a-specific-line-or-code-section).
+- ✅ Overwrite namespaces, plurals and contexts on-the-fly using [comment hints](https://i18next-extract.netlify.com/#/comment-hints?id=explicitly-specify-contexts-for-a-key).
 - [… and more?](https://i18next-extract.netlify.com/#/contributing)
 
 <!-- {% if false %} -->
@@ -36,8 +43,7 @@ traverse your Javascript/Typescript code in order to find i18next translation ke
 
 ## Documentation
 
-You can check out the full documentation at [i18next-extract.netlify.com](
-https://i18next-extract.netlify.com).
+You can check out the full documentation at [i18next-extract.netlify.com](https://i18next-extract.netlify.com).
 
 <!-- {% endif %} -->
 
@@ -55,8 +61,7 @@ npm i --save-dev babel-plugin-i18next-extract
 
 ### Minimal configuration
 
-> If you don't have a babel configuration yet, you can follow the [Configure Babel](
-https://babeljs.io/docs/en/configuration) documentation page to get started.
+> If you don't have a babel configuration yet, you can follow the [Configure Babel](https://babeljs.io/docs/en/configuration) documentation page to get started.
 
 Declare the plugin like any other plugin in your `.babelrc` and you're good to go:
 
@@ -80,11 +85,9 @@ You may want to specify additional configuration options:
 }
 ```
 
-> For an exhaustive list of configuration options, check out the [Configuration](
-https://i18next-extract.netlify.com/#/configuration) page.
+> For an exhaustive list of configuration options, check out the [Configuration](https://i18next-extract.netlify.com/#/configuration) page.
 
-Once the plugin is setup, you can build your app normally or run Babel through [Babel CLI](
-https://babeljs.io/docs/en/babel-cli):
+Once the plugin is setup, you can build your app normally or run Babel through [Babel CLI](https://babeljs.io/docs/en/babel-cli):
 
 ```bash
 yarn run babel -f .babelrc 'src/**/*.{js,jsx,ts,tsx}'
