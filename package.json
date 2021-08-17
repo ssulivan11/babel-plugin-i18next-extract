@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-i18next-extract-no-warnings",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "Statically extract translation keys from i18next application.",
   "engines": {
     "node": ">=10.0.0"
