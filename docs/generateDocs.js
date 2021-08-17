@@ -22,7 +22,7 @@ try {
 fs.copySync(ASSETS_PATH, OUTPUT_PATH);
 
 const env = new nunjucks.Environment(new nunjucks.FileSystemLoader('.'), {
-  autoescape: false,
+  autoescape: false
 });
 env.addGlobal('includeFile', (src, ctx) => {
   return env.renderString(
@@ -31,10 +31,10 @@ env.addGlobal('includeFile', (src, ctx) => {
       // Substitute documentation links
       .replace(
         /\(\s*https:\/\/i18next-extract\.netlify\.com\/(?:#\/)?([^)]+)\s*\)/gm,
-        '($1)',
+        '($1)'
       )
       .replace(/\(\s*(?:\.\/|\/)?docs\/assets\/([^)]+)\s*\)/gm, '($1)'),
-    ctx,
+    ctx
   );
 });
 
@@ -62,6 +62,6 @@ for (const templatePath of templatePaths) {
     fs.readFileSync(filePath, 'utf-8');
   fs.writeFileSync(
     path.join(OUTPUT_PATH, templatePath),
-    env.renderString(tpl, ctx),
+    env.renderString(tpl, ctx)
   );
 }

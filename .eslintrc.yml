@@ -41,7 +41,7 @@ rules:
   'prettier/prettier':
     - error
     - singleQuote: true
-      trailingComma: all
+      trailingComma: none
       printWidth: 79
   'prefer-const':
     - error

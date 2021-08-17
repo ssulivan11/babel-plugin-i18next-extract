@@ -17,7 +17,7 @@ import extractTFunction from './tFunction';
  */
 function isI18nextTCall(
   path: BabelCore.NodePath<BabelTypes.CallExpression>,
-  config: Config,
+  config: Config
 ): boolean {
   const callee = path.get('callee');
 
@@ -37,13 +37,13 @@ function isI18nextTCall(
 export default function extractI18nextInstance(
   path: BabelCore.NodePath<BabelTypes.CallExpression>,
   config: Config,
-  commentHints: CommentHint[] = [],
+  commentHints: CommentHint[] = []
 ): ExtractedKey[] {
   if (getCommentHintForPath(path, 'DISABLE', commentHints)) return [];
   if (!isI18nextTCall(path, config)) return [];
   return extractTFunction(path, config, commentHints, true).map((k) => ({
     ...k,
     sourceNodes: [path.node, ...k.sourceNodes],
-    extractorName: extractI18nextInstance.name,
+    extractorName: extractI18nextInstance.name
   }));
 }

@@ -4,7 +4,7 @@ import * as BabelTypes from '@babel/types';
 import {
   COMMENT_HINTS_KEYWORDS,
   getCommentHintForPath,
-  CommentHint,
+  CommentHint
 } from '../comments';
 import { Config } from '../config';
 import { ExtractedKey } from '../keys';
@@ -14,7 +14,7 @@ import {
   getFirstOrNull,
   evaluateIfConfident,
   findKeyInObjectExpression,
-  parseI18NextOptionsFromCommentHints,
+  parseI18NextOptionsFromCommentHints
 } from './commons';
 
 /**
@@ -27,7 +27,7 @@ import {
  */
 function isSimpleTCall(
   path: BabelCore.NodePath<BabelTypes.CallExpression>,
-  config: Config,
+  config: Config
 ): boolean {
   const callee = path.get('callee');
 
@@ -44,13 +44,13 @@ function isSimpleTCall(
  *   and/or count.
  */
 function parseTCallOptions(
-  path: BabelCore.NodePath | undefined,
+  path: BabelCore.NodePath | undefined
 ): ExtractedKey['parsedOptions'] {
   const res: ExtractedKey['parsedOptions'] = {
     contexts: false,
     hasCount: false,
     ns: null,
-    defaultValue: null,
+    defaultValue: null
   };
 
   if (!path) return res;
@@ -90,7 +90,7 @@ function parseTCallOptions(
  */
 function extractTCall(
   path: BabelCore.NodePath<BabelTypes.CallExpression>,
-  commentHints: CommentHint[],
+  commentHints: CommentHint[]
 ): ExtractedKey {
   const args = path.get('arguments');
   const keyEvaluation = evaluateIfConfident(args[0]);
@@ -101,7 +101,7 @@ function extractTCall(
         `evaluable or skip the line using a skip comment (/* ` +
         `${COMMENT_HINTS_KEYWORDS.DISABLE.LINE} */ or /* ` +
         `${COMMENT_HINTS_KEYWORDS.DISABLE.NEXT_LINE} */).`,
-      path,
+      path
     );
   }
 
@@ -109,10 +109,10 @@ function extractTCall(
     key: keyEvaluation,
     parsedOptions: {
       ...parseTCallOptions(args[1]),
-      ...parseI18NextOptionsFromCommentHints(path, commentHints),
+      ...parseI18NextOptionsFromCommentHints(path, commentHints)
     },
     sourceNodes: [path.node],
-    extractorName: extractTFunction.name,
+    extractorName: extractTFunction.name
   };
 }
 
@@ -130,7 +130,7 @@ export default function extractTFunction(
   path: BabelCore.NodePath<BabelTypes.CallExpression>,
   config: Config,
   commentHints: CommentHint[] = [],
-  skipCheck = false,
+  skipCheck = false
 ): ExtractedKey[] {
   if (getCommentHintForPath(path, 'DISABLE', commentHints)) return [];
   if (!skipCheck && !isSimpleTCall(path, config)) return [];

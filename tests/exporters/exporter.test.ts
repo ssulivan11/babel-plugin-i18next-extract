@@ -6,7 +6,7 @@ import { sync as rimraf } from 'rimraf';
 import { parseConfig } from '../../src/config';
 import exportTranslationKeys, {
   ExportError,
-  createExporterCache,
+  createExporterCache
 } from '../../src/exporters';
 import { createTranslationKey } from '../helpers';
 
@@ -58,7 +58,7 @@ describe('Test exporter works', () => {
 
     expect(
       hasThrown,
-      'Expected ExportError, but no exception was thrown',
+      'Expected ExportError, but no exception was thrown'
     ).toBe(true);
     expect(fs.readJSONSync(outputPath)).toEqual({ deep: 'has value' });
   });
@@ -85,7 +85,7 @@ describe('Test exporter works', () => {
     exportTranslationKeys([key1], 'fr', config, cache);
     expect(fs.readJSONSync(outputPath)).toEqual({
       newKey: 'with value',
-      newKey2: '',
+      newKey2: ''
     });
   });
 
@@ -103,12 +103,12 @@ describe('Test exporter works', () => {
     exportTranslationKeys([key0], 'fr', config, cache);
 
     expect(fs.readJSONSync(outputPath)).toEqual({
-      presentAtInit: 'foo',
+      presentAtInit: 'foo'
     });
 
     // update the locale file directly
     fs.writeJSONSync(outputPath, {
-      presentAtInit: 'foo updated directly in file after init',
+      presentAtInit: 'foo updated directly in file after init'
     });
 
     // view key
@@ -120,7 +120,7 @@ describe('Test exporter works', () => {
     // the locale file should have disk changes + new view key (newKeyAfterInit)
     expect(fs.readJSONSync(outputPath)).toEqual({
       presentAtInit: 'foo updated directly in file after init',
-      newKeyAfterInit: '',
+      newKeyAfterInit: ''
     });
   });
 });

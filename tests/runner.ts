@@ -50,13 +50,13 @@ function* genTestData(): IterableIterator<TestData> {
     const testFilesEnt = fs
       .readdirSync(testDir, {
         encoding: 'utf8',
-        withFileTypes: true,
+        withFileTypes: true
       })
       .filter(
         (testFile) =>
           testFile.isFile() &&
           (testFile.name.endsWith('.json') ||
-            testFile.name.includes('.config.js')),
+            testFile.name.includes('.config.js'))
       );
 
     for (const testFileEnt of testFilesEnt) {
@@ -66,7 +66,7 @@ function* genTestData(): IterableIterator<TestData> {
       const rawTestData = testFileEnt.name.includes('.config.js')
         ? require(testFile)
         : fs.readJSONSync(testFile, {
-            encoding: 'utf8',
+            encoding: 'utf8'
           });
       if (!Array.isArray(rawTestData.expectValues)) {
         rawTestData.expectValues = [[rawTestData.expectValues]];
@@ -77,13 +77,13 @@ function* genTestData(): IterableIterator<TestData> {
         testData.inputFiles === undefined
           ? [testFile.replace(/\.json$/, '.js')]
           : testData.inputFiles.map((p) =>
-              path.join(testDir, p.replace('/', path.sep)),
+              path.join(testDir, p.replace('/', path.sep))
             );
 
       const extractionDir = path.join(
         testDir,
         '.extracted',
-        testFileEnt.name.replace(/\.json$/, ''),
+        testFileEnt.name.replace(/\.json$/, '')
       );
 
       let outputPath;
@@ -101,13 +101,13 @@ function* genTestData(): IterableIterator<TestData> {
           // value from config
           outputPath = path.join(
             extractionDir,
-            testData.pluginOptions.outputPath as string,
+            testData.pluginOptions.outputPath as string
           );
         } else {
           // no value provided from config
           outputPath = path.join(
             extractionDir,
-            'translations.{{ns}}.{{locale}}.json',
+            'translations.{{ns}}.{{locale}}.json'
           );
         }
       }
@@ -122,9 +122,9 @@ function* genTestData(): IterableIterator<TestData> {
         expectValues: testData.expectValues || [],
         pluginOptions: {
           ...testData.pluginOptions,
-          outputPath,
+          outputPath
         },
-        errorMessageRegexp: rawTestData.errorMessageRegexp || null,
+        errorMessageRegexp: rawTestData.errorMessageRegexp || null
       };
     }
   }
@@ -132,7 +132,7 @@ function* genTestData(): IterableIterator<TestData> {
 
 function readExtractedFile(
   outputPath: ((locale: string, ns: string) => string) | string,
-  opts?: ExpectKeysOpts,
+  opts?: ExpectKeysOpts
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any {
   const ns = (opts && opts.ns) || 'translation';
@@ -152,7 +152,7 @@ function readExtractedFile(
       expect(
         true,
         `Couldn't find a JSON file to read at ${realOutputPath}. This probably means the ` +
-          `extraction didn't work.`,
+          `extraction didn't work.`
       ).toEqual(false);
     }
     throw err;
@@ -162,7 +162,7 @@ function readExtractedFile(
 
 function assertHasExpectedValues(
   testData: TestData,
-  errorMessage: string | null,
+  errorMessage: string | null
 ): void {
   if (testData.errorMessageRegexp !== null) {
     if (errorMessage === null) {
@@ -171,7 +171,7 @@ function assertHasExpectedValues(
       expect(
         errorMessage.match(testData.errorMessageRegexp),
         `Got error message "${errorMessage}" which doesn't match` +
-          ` expected regexp "${testData.errorMessageRegexp}".`,
+          ` expected regexp "${testData.errorMessageRegexp}".`
       ).toBeTruthy();
     }
   }
@@ -180,14 +180,14 @@ function assertHasExpectedValues(
       typeof testData.pluginOptions.outputPath === 'function'
         ? testData.pluginOptions.outputPath(
             opts?.locale || 'en',
-            opts?.ns || 'translation',
+            opts?.ns || 'translation'
           )
         : testData.pluginOptions.outputPath;
 
     const extracted = readExtractedFile(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       path!,
-      opts,
+      opts
     );
     expect(extracted, `opts=${JSON.stringify(opts)}`).toEqual(expected);
   }
@@ -209,7 +209,7 @@ export function runChecks(): void {
           let transformResult: BabelCore.BabelFileResult | null = null;
           try {
             transformResult = BabelCore.transformFileSync(jsFilePath, {
-              plugins: [[plugin, testData.pluginOptions]],
+              plugins: [[plugin, testData.pluginOptions]]
             });
           } catch (err) {
             errorMessage = err.message;
@@ -217,7 +217,7 @@ export function runChecks(): void {
           }
           expect(
             transformResult && transformResult.code,
-            `Babel transformation failed.`,
+            `Babel transformation failed.`
           ).toBeTruthy();
         }
 

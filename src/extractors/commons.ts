@@ -38,18 +38,18 @@ export function getFirstOrNull<T>(val: T | null | T[]): T | null {
  */
 export function parseI18NextOptionsFromCommentHints(
   path: BabelCore.NodePath,
-  commentHints: CommentHint[],
+  commentHints: CommentHint[]
 ): Partial<ExtractedKey['parsedOptions']> {
   const nsCommentHint = getCommentHintForPath(path, 'NAMESPACE', commentHints);
   const contextCommentHint = getCommentHintForPath(
     path,
     'CONTEXT',
-    commentHints,
+    commentHints
   );
   const pluralCommentHint = getCommentHintForPath(
     path,
     'PLURAL',
-    commentHints,
+    commentHints
   );
   const res: Partial<ExtractedKey['parsedOptions']> = {};
 
@@ -88,7 +88,7 @@ export function parseI18NextOptionsFromCommentHints(
 export function referencesImport(
   nodePath: BabelCore.NodePath,
   moduleSource: string,
-  importName: string,
+  importName: string
 ): boolean {
   if (nodePath.referencesImport(moduleSource, importName)) return true;
 
@@ -117,7 +117,7 @@ export function referencesImport(
 export function referencesChildIdentifier(
   nodePath: BabelCore.NodePath,
   parentNames: string[],
-  childName: string,
+  childName: string
 ): boolean {
   if (!nodePath.isMemberExpression()) return false;
 
@@ -138,7 +138,7 @@ export function referencesChildIdentifier(
  */
 export function evaluateIfConfident(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  path?: BabelCore.NodePath<any> | null,
+  path?: BabelCore.NodePath<any> | null
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any {
   if (!path || !path.node) {
@@ -161,7 +161,7 @@ export function evaluateIfConfident(
  * @yields [evaluated key, node path of the object expression property]
  */
 export function* iterateObjectExpression(
-  path: BabelCore.NodePath<BabelTypes.ObjectExpression>,
+  path: BabelCore.NodePath<BabelTypes.ObjectExpression>
 ): IterableIterator<
   [string, BabelCore.NodePath<BabelTypes.ObjectExpression['properties'][0]>]
 > {
@@ -193,7 +193,7 @@ export function* iterateObjectExpression(
  */
 export function findKeyInObjectExpression(
   path: BabelCore.NodePath<BabelTypes.ObjectExpression>,
-  key: string,
+  key: string
 ): BabelCore.NodePath<BabelTypes.ObjectExpression['properties'][0]> | null {
   for (const [keyEvaluation, prop] of iterateObjectExpression(path)) {
     if (keyEvaluation === key) return prop;
@@ -211,7 +211,7 @@ export function findKeyInObjectExpression(
  */
 export function findJSXAttributeByName(
   path: BabelCore.NodePath<BabelTypes.JSXElement>,
-  name: string,
+  name: string
 ): BabelCore.NodePath<BabelTypes.JSXAttribute> | null {
   const openingElement = path.get('openingElement');
   const attributes = openingElement.get('attributes');
@@ -243,7 +243,7 @@ export function findJSXAttributeByName(
  * @return the resolved expression or null if it could not be resolved.
  */
 export function resolveIdentifier(
-  nodePath: BabelCore.NodePath<BabelTypes.Identifier>,
+  nodePath: BabelCore.NodePath<BabelTypes.Identifier>
 ): BabelCore.NodePath<BabelTypes.Expression> | null {
   const bindings = nodePath.scope.bindings[nodePath.node.name];
   if (!bindings) return null;
@@ -254,7 +254,7 @@ export function resolveIdentifier(
       : []),
     ...bindings.constantViolations
       .filter((p) => p.isAssignmentExpression())
-      .map((p) => p.get('right')),
+      .map((p) => p.get('right'))
   ];
   if (declarationExpressions.length === 0) return null;
 
@@ -278,13 +278,13 @@ export function resolveIdentifier(
 export function isCustomImportedNode(
   absoluteNodePaths: readonly [string, string][],
   path: BabelCore.NodePath,
-  name: BabelCore.NodePath,
+  name: BabelCore.NodePath
 ): boolean {
   return absoluteNodePaths.some(([sourceModule, importName]): boolean => {
     if (isAbsolute(sourceModule)) {
       let relativeSourceModulePath = relative(
         dirname(path.state.filename),
-        sourceModule,
+        sourceModule
       );
       if (!relativeSourceModulePath.startsWith('.')) {
         relativeSourceModulePath = '.' + sep + relativeSourceModulePath;

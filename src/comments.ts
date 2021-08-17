@@ -39,26 +39,26 @@ export const COMMENT_HINTS_KEYWORDS: {
     LINE: COMMENT_HINT_PREFIX + 'disable-line',
     NEXT_LINE: COMMENT_HINT_PREFIX + 'disable-next-line',
     SECTION_START: COMMENT_HINT_PREFIX + 'disable',
-    SECTION_STOP: COMMENT_HINT_PREFIX + 'enable',
+    SECTION_STOP: COMMENT_HINT_PREFIX + 'enable'
   },
   NAMESPACE: {
     LINE: COMMENT_HINT_PREFIX + 'mark-ns-line',
     NEXT_LINE: COMMENT_HINT_PREFIX + 'mark-ns-next-line',
     SECTION_START: COMMENT_HINT_PREFIX + 'mark-ns-start',
-    SECTION_STOP: COMMENT_HINT_PREFIX + 'mark-ns-stop',
+    SECTION_STOP: COMMENT_HINT_PREFIX + 'mark-ns-stop'
   },
   CONTEXT: {
     LINE: COMMENT_HINT_PREFIX + 'mark-context-line',
     NEXT_LINE: COMMENT_HINT_PREFIX + 'mark-context-next-line',
     SECTION_START: COMMENT_HINT_PREFIX + 'mark-context-start',
-    SECTION_STOP: COMMENT_HINT_PREFIX + 'mark-context-stop',
+    SECTION_STOP: COMMENT_HINT_PREFIX + 'mark-context-stop'
   },
   PLURAL: {
     LINE: COMMENT_HINT_PREFIX + 'mark-plural-line',
     NEXT_LINE: COMMENT_HINT_PREFIX + 'mark-plural-next-line',
     SECTION_START: COMMENT_HINT_PREFIX + 'mark-plural-start',
-    SECTION_STOP: COMMENT_HINT_PREFIX + 'mark-plural-stop',
-  },
+    SECTION_STOP: COMMENT_HINT_PREFIX + 'mark-plural-stop'
+  }
 };
 
 /**
@@ -67,7 +67,7 @@ export const COMMENT_HINTS_KEYWORDS: {
  * @yields Comment hint without line interval information.
  */
 function* extractCommentHintsFromBabelComment(
-  comment: BabelTypes.Comment,
+  comment: BabelTypes.Comment
 ): IterableIterator<BaseCommentHint> {
   for (const line of comment.value.split(/\r?\n/)) {
     const trimmedValue = line.trim();
@@ -75,17 +75,17 @@ function* extractCommentHintsFromBabelComment(
     const value = trimmedValue.split(/\s+(.+)/)[1] || '';
 
     for (const [commentHintType, commentHintKeywords] of Object.entries(
-      COMMENT_HINTS_KEYWORDS,
+      COMMENT_HINTS_KEYWORDS
     )) {
       for (const [commentHintScope, commentHintKeyword] of Object.entries(
-        commentHintKeywords,
+        commentHintKeywords
       )) {
         if (keyword === commentHintKeyword) {
           yield {
             type: commentHintType as CommentHintType,
             scope: commentHintScope as CommentHintScope,
             value,
-            comment,
+            comment
           };
         }
       }
@@ -99,7 +99,7 @@ function* extractCommentHintsFromBabelComment(
  * @returns Comment hints with line interval information.
  */
 function computeCommentHintsIntervals(
-  commentHints: BaseCommentHint[],
+  commentHints: BaseCommentHint[]
 ): CommentHint[] {
   const result = Array<CommentHint>();
 
@@ -108,7 +108,7 @@ function computeCommentHintsIntervals(
       result.push({
         startLine: commentHint.comment.loc.start.line,
         stopLine: commentHint.comment.loc.start.line,
-        ...commentHint,
+        ...commentHint
       });
     }
 
@@ -116,7 +116,7 @@ function computeCommentHintsIntervals(
       result.push({
         startLine: commentHint.comment.loc.end.line + 1,
         stopLine: commentHint.comment.loc.end.line + 1,
-        ...commentHint,
+        ...commentHint
       });
     }
 
@@ -124,7 +124,7 @@ function computeCommentHintsIntervals(
       result.push({
         startLine: commentHint.comment.loc.start.line,
         stopLine: Infinity,
-        ...commentHint,
+        ...commentHint
       });
     }
 
@@ -149,7 +149,7 @@ function computeCommentHintsIntervals(
  * @param comments Babel comments (ordered by line)
  */
 export function parseCommentHints(
-  comments: BabelTypes.Comment[],
+  comments: BabelTypes.Comment[]
 ): CommentHint[] {
   const baseCommentHints = Array<BaseCommentHint>();
 
@@ -169,7 +169,7 @@ export function parseCommentHints(
 export function getCommentHintForPath(
   path: BabelCore.NodePath,
   commentHintType: BaseCommentHint['type'],
-  commentHints: CommentHint[],
+  commentHints: CommentHint[]
 ): CommentHint | null {
   if (!path.node.loc) return null;
   const nodeLine = path.node.loc.start.line;

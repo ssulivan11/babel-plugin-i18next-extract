@@ -18,14 +18,14 @@ import extractTransComponent from './transComponent';
 export default function extractCustomTransComponent(
   path: BabelCore.NodePath<BabelTypes.JSXElement>,
   config: Config,
-  commentHints: CommentHint[] = [],
+  commentHints: CommentHint[] = []
 ): ExtractedKey[] {
   if (getCommentHintForPath(path, 'DISABLE', commentHints)) return [];
   if (
     !isCustomImportedNode(
       config.cache.absoluteCustomTransComponents,
       path,
-      path.get('openingElement').get('name'),
+      path.get('openingElement').get('name')
     )
   )
     return [];

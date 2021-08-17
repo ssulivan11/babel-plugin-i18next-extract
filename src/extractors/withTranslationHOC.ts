@@ -8,7 +8,7 @@ import { ExtractedKey } from '../keys';
 import {
   getFirstOrNull,
   evaluateIfConfident,
-  referencesImport,
+  referencesImport
 } from './commons';
 import extractTFunction from './tFunction';
 
@@ -19,7 +19,7 @@ import extractTFunction from './tFunction';
  * @returns true if the given node is an HOC call expression.
  */
 function isWithTranslationHOCCallExpression(
-  path: BabelCore.NodePath,
+  path: BabelCore.NodePath
 ): path is BabelCore.NodePath<BabelTypes.CallExpression> {
   return (
     path.isCallExpression() &&
@@ -35,7 +35,7 @@ function isWithTranslationHOCCallExpression(
  * @returns withTranslation call expression if found, else null
  */
 function findWithTranslationHOCCallExpressionInParents(
-  path: BabelCore.NodePath<BabelTypes.Node>,
+  path: BabelCore.NodePath<BabelTypes.Node>
 ): BabelCore.NodePath<BabelTypes.CallExpression> | null {
   const callExpr: BabelCore.NodePath = path.findParent((parentPath) => {
     if (!parentPath.isCallExpression()) return false;
@@ -64,7 +64,7 @@ function findWithTranslationHOCCallExpressionInParents(
  * @returns withTranslation call expression if found, else null
  */
 function findWithTranslationHOCCallExpressionInCompose(
-  path: BabelCore.NodePath<BabelTypes.Node>,
+  path: BabelCore.NodePath<BabelTypes.Node>
 ): BabelCore.NodePath<BabelTypes.CallExpression> | null {
   const composeFunctionNames = ['compose', 'flow', 'flowRight'];
 
@@ -108,7 +108,7 @@ function findWithTranslationHOCCallExpressionInCompose(
  * @returns "withTranslation()()" call expression if found. Else null.
  */
 function findWithTranslationHOCCallExpression(
-  path: BabelCore.NodePath<BabelTypes.Function | BabelTypes.ClassDeclaration>,
+  path: BabelCore.NodePath<BabelTypes.Function | BabelTypes.ClassDeclaration>
 ): BabelCore.NodePath<BabelTypes.CallExpression> | null {
   let functionIdentifier = path.get('id');
 
@@ -154,7 +154,7 @@ function findWithTranslationHOCCallExpression(
  * @returns t identifier or null of it was not found in the object pattern.
  */
 function findTFunctionIdentifierInObjectPattern(
-  path: BabelCore.NodePath<BabelTypes.ObjectPattern>,
+  path: BabelCore.NodePath<BabelTypes.ObjectPattern>
 ): BabelCore.NodePath<BabelTypes.Identifier> | null {
   const props = path.get('properties');
 
@@ -177,7 +177,7 @@ function findTFunctionIdentifierInObjectPattern(
  * @returns true if the path is the callee of a call expression.
  */
 function isCallee(
-  path: BabelCore.NodePath,
+  path: BabelCore.NodePath
 ): path is BabelCore.NodePath & {
   parentPath: BabelCore.NodePath<BabelTypes.CallExpression>;
 } {
@@ -197,7 +197,7 @@ function isCallee(
  * @returns Call expressions to t function.
  */
 function findTFunctionCallsFromPropsAssignment(
-  propsId: BabelCore.NodePath,
+  propsId: BabelCore.NodePath
 ): BabelCore.NodePath<BabelTypes.CallExpression>[] {
   const tReferences = Array<BabelCore.NodePath>();
 
@@ -210,7 +210,7 @@ function findTFunctionCallsFromPropsAssignment(
     // or "const {t, other, props} = this.props"
     // we want to find references to "t"
     const tFunctionIdentifier = findTFunctionIdentifierInObjectPattern(
-      propsId,
+      propsId
     );
     if (tFunctionIdentifier === null) return [];
     const tBinding = scope.bindings[tFunctionIdentifier.node.name];
@@ -247,7 +247,7 @@ function findTFunctionCallsFromPropsAssignment(
  * @param path node path to the class component.
  */
 function findTFunctionCallsInClassComponent(
-  path: BabelCore.NodePath<BabelTypes.ClassDeclaration>,
+  path: BabelCore.NodePath<BabelTypes.ClassDeclaration>
 ): BabelCore.NodePath<BabelTypes.CallExpression>[] {
   const result = Array<BabelCore.NodePath<BabelTypes.CallExpression>>();
 
@@ -292,7 +292,7 @@ function findTFunctionCallsInClassComponent(
         const id = path.parentPath.parentPath.get('id');
         result.push(...findTFunctionCallsFromPropsAssignment(id));
       }
-    },
+    }
   };
   path.traverse(thisVisitor);
 
@@ -304,7 +304,7 @@ function findTFunctionCallsInClassComponent(
  * @param path node path to the function component.
  */
 function findTFunctionCallsInFunctionComponent(
-  path: BabelCore.NodePath<BabelTypes.Function>,
+  path: BabelCore.NodePath<BabelTypes.Function>
 ): BabelCore.NodePath<BabelTypes.CallExpression>[] {
   const propsParam = path.get('params')[0];
   if (propsParam === undefined) return [];
@@ -324,11 +324,11 @@ function findTFunctionCallsInFunctionComponent(
 export default function extractWithTranslationHOC(
   path: BabelCore.NodePath<BabelTypes.Function | BabelTypes.ClassDeclaration>,
   config: Config,
-  commentHints: CommentHint[] = [],
+  commentHints: CommentHint[] = []
 ): ExtractedKey[] {
   // Detect if this component is wrapped with withTranslation() somewhere
   const withTranslationCallExpression = findWithTranslationHOCCallExpression(
-    path,
+    path
   );
   if (withTranslationCallExpression === null) return [];
 
@@ -337,7 +337,7 @@ export default function extractWithTranslationHOC(
     tCalls = findTFunctionCallsInClassComponent(path);
   } else {
     tCalls = findTFunctionCallsInFunctionComponent(
-      path as BabelCore.NodePath<BabelTypes.Function>,
+      path as BabelCore.NodePath<BabelTypes.Function>
     );
   }
 
@@ -346,7 +346,7 @@ export default function extractWithTranslationHOC(
   const nsCommentHint = getCommentHintForPath(
     withTranslationCallExpression,
     'NAMESPACE',
-    commentHints,
+    commentHints
   );
   if (nsCommentHint) {
     // We got a comment hint, take its value as namespace.
@@ -354,7 +354,7 @@ export default function extractWithTranslationHOC(
   } else {
     // Otherwise, try to get namespace from arguments.
     const namespaceArgument = withTranslationCallExpression.get(
-      'arguments',
+      'arguments'
     )[0];
     ns = getFirstOrNull(evaluateIfConfident(namespaceArgument));
   }
@@ -368,15 +368,15 @@ export default function extractWithTranslationHOC(
         ...k,
         parsedOptions: {
           ...k.parsedOptions,
-          ns: k.parsedOptions.ns || ns,
-        },
-      })),
+          ns: k.parsedOptions.ns || ns
+        }
+      }))
     ];
   }
 
   return keys.map((k) => ({
     ...k,
     sourceNodes: [path.node, ...k.sourceNodes],
-    extractorName: extractWithTranslationHOC.name,
+    extractorName: extractWithTranslationHOC.name
   }));
 }

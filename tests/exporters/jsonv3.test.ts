@@ -10,7 +10,7 @@ describe('Test JSONv3 exporter', () => {
     expect(jsonv3Exporter.init({ config })).toEqual({
       whitespacesBefore: '',
       whitespacesAfter: '\n',
-      content: {},
+      content: {}
     });
   });
 
@@ -18,12 +18,12 @@ describe('Test JSONv3 exporter', () => {
     expect(
       jsonv3Exporter.parse({
         config,
-        content: '\n\n\t\r\n  {"hello": "world"}\n\t  \r\n',
-      }),
+        content: '\n\n\t\r\n  {"hello": "world"}\n\t  \r\n'
+      })
     ).toEqual({
       whitespacesBefore: '\n\n\t\r\n  ',
       whitespacesAfter: '\n\t  \r\n',
-      content: { hello: 'world' },
+      content: { hello: 'world' }
     });
   });
 
@@ -34,9 +34,9 @@ describe('Test JSONv3 exporter', () => {
         file: {
           whitespacesBefore: '\n\n\t\r\n  ',
           whitespacesAfter: '\n\t  \r\n',
-          content: { hello: 'world' },
-        },
-      }),
+          content: { hello: 'world' }
+        }
+      })
     ).toEqual('\n\n\t\r\n  {"hello":"world"}\n\t  \r\n');
   });
 
@@ -48,9 +48,9 @@ describe('Test JSONv3 exporter', () => {
         file: {
           whitespacesBefore: '',
           whitespacesAfter: '',
-          content: { hello: 'world' },
-        },
-      }),
+          content: { hello: 'world' }
+        }
+      })
     ).toEqual('{\n  "hello": "world"\n}');
   });
 
@@ -63,9 +63,9 @@ describe('Test JSONv3 exporter', () => {
         file: {
           whitespacesBefore: '',
           whitespacesAfter: '',
-          content: { hello: 'world' },
-        },
-      }),
+          content: { hello: 'world' }
+        }
+      })
     ).toEqual('world');
   });
 
@@ -78,9 +78,9 @@ describe('Test JSONv3 exporter', () => {
         file: {
           whitespacesBefore: '',
           whitespacesAfter: '',
-          content: { hello: { new: 'world' } },
-        },
-      }),
+          content: { hello: { new: 'world' } }
+        }
+      })
     ).toEqual('world');
   });
 
@@ -93,9 +93,9 @@ describe('Test JSONv3 exporter', () => {
         file: {
           whitespacesBefore: '',
           whitespacesAfter: '',
-          content: { hello: { notSoNew: 'world' } },
-        },
-      }),
+          content: { hello: { notSoNew: 'world' } }
+        }
+      })
     ).toBeUndefined();
   });
 
@@ -108,9 +108,9 @@ describe('Test JSONv3 exporter', () => {
         file: {
           whitespacesBefore: '',
           whitespacesAfter: '',
-          content: { hello: 250 },
-        },
-      }),
+          content: { hello: 250 }
+        }
+      })
     ).toThrow(ConflictError);
 
     expect(() =>
@@ -121,9 +121,9 @@ describe('Test JSONv3 exporter', () => {
         file: {
           whitespacesBefore: '',
           whitespacesAfter: '',
-          content: { hello: [] },
-        },
-      }),
+          content: { hello: [] }
+        }
+      })
     ).toThrow(ConflictError);
   });
 
@@ -136,9 +136,9 @@ describe('Test JSONv3 exporter', () => {
         file: {
           whitespacesBefore: '',
           whitespacesAfter: '',
-          content: { hello: null },
-        },
-      }),
+          content: { hello: null }
+        }
+      })
     ).toThrow(ConflictError);
   });
 
@@ -148,8 +148,8 @@ describe('Test JSONv3 exporter', () => {
         config,
         file: { whitespacesBefore: '', whitespacesAfter: '', content: {} },
         key: createTranslationKey('hello'),
-        value: 'world',
-      }).content,
+        value: 'world'
+      }).content
     ).toEqual({ hello: 'world' });
   });
 
@@ -159,8 +159,8 @@ describe('Test JSONv3 exporter', () => {
         config,
         file: { whitespacesBefore: '', whitespacesAfter: '', content: {} },
         key: createTranslationKey('new', ['hello', 'brave']),
-        value: 'world',
-      }).content,
+        value: 'world'
+      }).content
     ).toEqual({ hello: { brave: { new: 'world' } } });
   });
 
@@ -171,11 +171,11 @@ describe('Test JSONv3 exporter', () => {
         file: {
           whitespacesBefore: '',
           whitespacesAfter: '',
-          content: { hello: { brave: 'world' } },
+          content: { hello: { brave: 'world' } }
         },
         key: createTranslationKey('new', ['hello', 'brave']),
-        value: 'world',
-      }),
+        value: 'world'
+      })
     ).toThrow(ConflictError);
   });
 });

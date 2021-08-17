@@ -9,7 +9,7 @@ import {
   getFirstOrNull,
   findJSXAttributeByName,
   evaluateIfConfident,
-  referencesImport,
+  referencesImport
 } from './commons';
 import extractTFunction from './tFunction';
 
@@ -19,13 +19,13 @@ import extractTFunction from './tFunction';
  * @returns true if the given element is indeed a `Translation` render prop.
  */
 function isTranslationRenderProp(
-  path: BabelCore.NodePath<BabelTypes.JSXElement>,
+  path: BabelCore.NodePath<BabelTypes.JSXElement>
 ): boolean {
   const openingElement = path.get('openingElement');
   return referencesImport(
     openingElement.get('name'),
     'react-i18next',
-    'Translation',
+    'Translation'
   );
 }
 
@@ -40,7 +40,7 @@ function isTranslationRenderProp(
 export default function extractTranslationRenderProp(
   path: BabelCore.NodePath<BabelTypes.JSXElement>,
   config: Config,
-  commentHints: CommentHint[] = [],
+  commentHints: CommentHint[] = []
 ): ExtractedKey[] {
   if (!isTranslationRenderProp(path)) return [];
 
@@ -55,7 +55,7 @@ export default function extractTranslationRenderProp(
     const nsAttr = findJSXAttributeByName(path, 'ns');
     if (nsAttr) {
       let value: BabelCore.NodePath<BabelTypes.Node | null> = nsAttr.get(
-        'value',
+        'value'
       );
       if (value.isJSXExpressionContainer()) value = value.get('expression');
       ns = getFirstOrNull(evaluateIfConfident(value));
@@ -89,15 +89,15 @@ export default function extractTranslationRenderProp(
           reference.parentPath,
           config,
           commentHints,
-          true,
+          true
         ).map((k) => ({
           // Add namespace if it was not explicitely set in t() call.
           ...k,
           parsedOptions: {
             ...k.parsedOptions,
-            ns: k.parsedOptions.ns || ns,
-          },
-        })),
+            ns: k.parsedOptions.ns || ns
+          }
+        }))
       ];
     }
   }
@@ -105,6 +105,6 @@ export default function extractTranslationRenderProp(
   return keys.map((k) => ({
     ...k,
     sourceNodes: [path.node, ...k.sourceNodes],
-    extractorName: extractTranslationRenderProp.name,
+    extractorName: extractTranslationRenderProp.name
   }));
 }

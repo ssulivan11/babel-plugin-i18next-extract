@@ -6,11 +6,11 @@ import { Config, parseConfig } from './config';
 import { PLUGIN_NAME } from './constants';
 import exportTranslationKeys, {
   ExporterCache,
-  createExporterCache,
+  createExporterCache
 } from './exporters';
 import Extractors, {
   EXTRACTORS_PRIORITIES,
-  ExtractionError,
+  ExtractionError
 } from './extractors';
 import extractWithTranslationHOC from './extractors/withTranslationHOC';
 import { computeDerivedKeys, ExtractedKey, TranslationKey } from './keys';
@@ -44,7 +44,7 @@ interface I18NextExtractState {
 function handleExtraction<T>(
   path: BabelCore.NodePath,
   state: VisitorState,
-  callback: (collect: (keys: ExtractedKey[]) => void) => T,
+  callback: (collect: (keys: ExtractedKey[]) => void) => T
 ): T | undefined {
   const filename = (state.file && state.file.opts.filename) || '???';
   const extractState = state.I18NextExtract;
@@ -56,17 +56,17 @@ function handleExtraction<T>(
     for (const newKeyCandidate of newKeysCandidates) {
       const conflictingKeyIndex = currentKeys.findIndex((extractedKey) =>
         extractedKey.sourceNodes.some((extractedNode) =>
-          newKeyCandidate.sourceNodes.includes(extractedNode),
-        ),
+          newKeyCandidate.sourceNodes.includes(extractedNode)
+        )
       );
 
       if (conflictingKeyIndex !== -1) {
         const conflictingKey = currentKeys[conflictingKeyIndex];
         const conflictingKeyPriority = -EXTRACTORS_PRIORITIES.findIndex(
-          (v) => v === conflictingKey.extractorName,
+          (v) => v === conflictingKey.extractorName
         );
         const newKeyPriority = -EXTRACTORS_PRIORITIES.findIndex(
-          (v) => v === newKeyCandidate.extractorName,
+          (v) => v === newKeyCandidate.extractorName
         );
 
         if (newKeyPriority <= conflictingKeyPriority) {
@@ -97,9 +97,9 @@ function handleExtraction<T>(
     // eslint-disable-next-line no-console
     console.error(
       `${PLUGIN_NAME}: Extraction error in ${filename} at line ` +
-        `${lineNumber}. ${err.message}\n\nYou must use string contexts instead of variable objects.\nhttps://i18next-extract.netlify.app/#/configuration?id=defaultcontexts`,
+        `${lineNumber}. ${err.message}\n\nYou must use string contexts instead of variable objects.\nhttps://i18next-extract.netlify.app/#/configuration?id=defaultcontexts`
     );
-    process.exit(1)
+    process.exit(1);
   }
 }
 
@@ -112,36 +112,36 @@ const Visitor: BabelCore.Visitor<VisitorState> = {
         Extractors.extractCustomUseTranslationHook(
           path,
           extractState.config,
-          extractState.commentHints,
-        ),
+          extractState.commentHints
+        )
       );
       collect(
         Extractors.extractUseTranslationHook(
           path,
           extractState.config,
-          extractState.commentHints,
-        ),
+          extractState.commentHints
+        )
       );
       collect(
         Extractors.extractGetFixedTFunction(
           path,
           extractState.config,
-          extractState.commentHints,
-        ),
+          extractState.commentHints
+        )
       );
       collect(
         Extractors.extractI18nextInstance(
           path,
           extractState.config,
-          extractState.commentHints,
-        ),
+          extractState.commentHints
+        )
       );
       collect(
         Extractors.extractTFunction(
           path,
           extractState.config,
-          extractState.commentHints,
-        ),
+          extractState.commentHints
+        )
       );
     });
   },
@@ -154,22 +154,22 @@ const Visitor: BabelCore.Visitor<VisitorState> = {
         Extractors.extractTranslationRenderProp(
           path,
           extractState.config,
-          extractState.commentHints,
-        ),
+          extractState.commentHints
+        )
       );
       collect(
         Extractors.extractCustomTransComponent(
           path,
           extractState.config,
-          extractState.commentHints,
-        ),
+          extractState.commentHints
+        )
       );
       collect(
         Extractors.extractTransComponent(
           path,
           extractState.config,
-          extractState.commentHints,
-        ),
+          extractState.commentHints
+        )
       );
     });
   },
@@ -182,8 +182,8 @@ const Visitor: BabelCore.Visitor<VisitorState> = {
         extractWithTranslationHOC(
           path,
           extractState.config,
-          extractState.commentHints,
-        ),
+          extractState.commentHints
+        )
       );
     });
   },
@@ -196,15 +196,15 @@ const Visitor: BabelCore.Visitor<VisitorState> = {
         extractWithTranslationHOC(
           path,
           extractState.config,
-          extractState.commentHints,
-        ),
+          extractState.commentHints
+        )
       );
     });
-  },
+  }
 };
 
 export default function (
-  api: BabelCore.ConfigAPI,
+  api: BabelCore.ConfigAPI
 ): BabelCore.PluginObj<VisitorState> {
   api.assertVersion(7);
 
@@ -218,7 +218,7 @@ export default function (
         config: parseConfig(this.opts),
         extractedKeys: [],
         commentHints: [],
-        exporterCache,
+        exporterCache
       };
     },
 
@@ -231,15 +231,15 @@ export default function (
         const derivedKeys = extractState.extractedKeys.reduce(
           (accumulator, k) => [
             ...accumulator,
-            ...computeDerivedKeys(k, locale, extractState.config),
+            ...computeDerivedKeys(k, locale, extractState.config)
           ],
-          Array<TranslationKey>(),
+          Array<TranslationKey>()
         );
         exportTranslationKeys(
           derivedKeys,
           locale,
           extractState.config,
-          extractState.exporterCache,
+          extractState.exporterCache
         );
       }
     },
@@ -250,12 +250,12 @@ export default function (
         // Program node doesn't call the visitor for Program node.
         if (BabelTypes.isFile(path.container)) {
           this.I18NextExtract.commentHints = parseCommentHints(
-            path.container.comments,
+            path.container.comments
           );
         }
 
         path.traverse(Visitor, state);
-      },
-    },
+      }
+    }
   };
 }

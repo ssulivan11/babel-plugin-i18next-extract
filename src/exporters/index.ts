@@ -33,7 +33,7 @@ export interface ExporterCache {
 export function createExporterCache(): ExporterCache {
   return {
     originalTranslationFiles: {},
-    currentTranslationFiles: {},
+    currentTranslationFiles: {}
   };
 }
 
@@ -44,7 +44,7 @@ function loadTranslationFile<F>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   exporter: Exporter<F, any>,
   config: Config,
-  filePath: string,
+  filePath: string
 ): F {
   let content: string;
   try {
@@ -63,7 +63,7 @@ function loadTranslationFile<F>(
 function getDefaultValue(
   key: TranslationKey,
   locale: string,
-  config: Config,
+  config: Config
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any {
   let defaultValue = config.defaultValue;
@@ -110,7 +110,7 @@ export default function exportTranslationKeys(
   keys: TranslationKey[],
   locale: string,
   config: Config,
-  cache: ExporterCache,
+  cache: ExporterCache
 ): void {
   const keysPerFilepath: { [path: string]: TranslationKey[] } = {};
 
@@ -134,8 +134,8 @@ export default function exportTranslationKeys(
       loadTranslationFile(exporter, config, filePath),
       {
         // Overwrites the existing array values completely rather than concatenating them
-        arrayMerge: (dest, source) => source,
-      },
+        arrayMerge: (dest, source) => source
+      }
     );
 
     const originalTranslationFile = cache.originalTranslationFiles[filePath];
@@ -150,7 +150,7 @@ export default function exportTranslationKeys(
         config,
         file: originalTranslationFile,
         keyPath: k.keyPath,
-        cleanKey: k.cleanKey,
+        cleanKey: k.cleanKey
       });
       translationFile = exporter.addKey({
         config,
@@ -159,7 +159,7 @@ export default function exportTranslationKeys(
         value:
           previousValue === undefined
             ? getDefaultValue(k, locale, config)
-            : previousValue,
+            : previousValue
       });
     }
 
@@ -173,11 +173,11 @@ export default function exportTranslationKeys(
       filePath,
       exporter.stringify({
         config,
-        file: translationFile,
+        file: translationFile
       }),
       {
-        encoding: 'utf8',
-      },
+        encoding: 'utf8'
+      }
     );
   }
 }

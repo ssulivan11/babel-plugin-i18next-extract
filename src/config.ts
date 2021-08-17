@@ -54,7 +54,7 @@ export function parseConfig(opts: Partial<Config>): Config {
   const customTransComponents = coalesce(opts.customTransComponents, []);
   const customUseTranslationHooks = coalesce(
     opts.customUseTranslationHooks,
-    [],
+    []
   );
 
   return {
@@ -69,12 +69,12 @@ export function parseConfig(opts: Partial<Config>): Config {
       'br',
       'strong',
       'i',
-      'p',
+      'p'
     ]),
 
     i18nextInstanceNames: coalesce(opts.i18nextInstanceNames, [
       'i18next',
-      'i18n',
+      'i18n'
     ]),
     tFunctionNames: coalesce(opts.tFunctionNames, ['t']),
     defaultContexts: coalesce(opts.defaultContexts, ['', 'male', 'female']),
@@ -83,21 +83,21 @@ export function parseConfig(opts: Partial<Config>): Config {
         ? opts.outputPath
         : coalesce(
             opts.outputPath,
-            './extractedTranslations/{{locale}}/{{ns}}.json',
+            './extractedTranslations/{{locale}}/{{ns}}.json'
           ),
     defaultValue: coalesce(opts.defaultValue, ''),
     useI18nextDefaultValue: coalesce(
       opts.useI18nextDefaultValue,
-      defaultLocales,
+      defaultLocales
     ),
     useI18nextDefaultValueForDerivedKeys: coalesce(
       opts.useI18nextDefaultValueForDerivedKeys,
-      false,
+      false
     ),
     keyAsDefaultValue: coalesce(opts.keyAsDefaultValue, false),
     keyAsDefaultValueForDerivedKeys: coalesce(
       opts.keyAsDefaultValueForDerivedKeys,
-      true,
+      true
     ),
     discardOldKeys: coalesce(opts.discardOldKeys, false),
     jsonSpace: coalesce(opts.jsonSpace, 2),
@@ -108,15 +108,15 @@ export function parseConfig(opts: Partial<Config>): Config {
       absoluteCustomTransComponents: customTransComponents.map(
         ([sourceModule, importName]) => [
           resolveIfRelative(sourceModule),
-          importName,
-        ],
+          importName
+        ]
       ),
       absoluteCustomHooks: customUseTranslationHooks.map(
         ([sourceModule, importName]) => [
           resolveIfRelative(sourceModule),
-          importName,
-        ],
-      ),
-    },
+          importName
+        ]
+      )
+    }
   };
 }

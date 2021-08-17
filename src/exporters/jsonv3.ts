@@ -27,7 +27,7 @@ interface JsonV3File {
  * Check whether a JsonV3Value is a plain object.
  */
 function jsonV3ValueIsObject(
-  val: JsonV3Value,
+  val: JsonV3Value
 ): val is { [k: string]: JsonV3Value } {
   return typeof val === 'object' && val !== null && !Array.isArray(val);
 }
@@ -44,12 +44,12 @@ function recursiveAddKey(
   fileContent: JsonV3File['content'],
   keyPath: string[],
   cleanKey: string,
-  value: JsonV3Value,
+  value: JsonV3Value
 ): JsonV3File['content'] {
   if (keyPath.length === 0) {
     return {
       ...fileContent,
-      [cleanKey]: value,
+      [cleanKey]: value
     };
   }
 
@@ -67,8 +67,8 @@ function recursiveAddKey(
       current,
       keyPath.slice(1),
       cleanKey,
-      value,
-    ),
+      value
+    )
   };
 }
 
@@ -77,7 +77,7 @@ const jsonv3Exporter: Exporter<JsonV3File, JsonV3Value> = {
     return {
       whitespacesBefore: '',
       whitespacesAfter: '\n',
-      content: {},
+      content: {}
     };
   },
   parse: ({ content }) => {
@@ -88,7 +88,7 @@ const jsonv3Exporter: Exporter<JsonV3File, JsonV3Value> = {
         whitespacesBeforeMatch === null ? '' : whitespacesBeforeMatch[0],
       whitespacesAfter:
         whitespacesAfterMatch === null ? '' : whitespacesAfterMatch[0],
-      content: JSON.parse(content),
+      content: JSON.parse(content)
     };
   },
   stringify: ({ config, file }) => {
@@ -115,9 +115,9 @@ const jsonv3Exporter: Exporter<JsonV3File, JsonV3Value> = {
     const { key, file, value } = params;
     return {
       ...file,
-      content: recursiveAddKey(file.content, key.keyPath, key.cleanKey, value),
+      content: recursiveAddKey(file.content, key.keyPath, key.cleanKey, value)
     };
-  },
+  }
 };
 
 export default jsonv3Exporter;

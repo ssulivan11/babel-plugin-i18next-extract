@@ -2,7 +2,7 @@ import { TranslationKey } from '../src/keys';
 
 export function createTranslationKey(
   key: string,
-  keyPath: string[] = [],
+  keyPath: string[] = []
 ): TranslationKey {
   return {
     key,
@@ -14,9 +14,9 @@ export function createTranslationKey(
       contexts: false,
       hasCount: false,
       ns: null,
-      defaultValue: null,
+      defaultValue: null
     },
     cleanKey: key,
-    ns: 'translation',
+    ns: 'translation'
   };
 }

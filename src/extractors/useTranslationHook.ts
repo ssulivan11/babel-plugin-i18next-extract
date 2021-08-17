@@ -8,7 +8,7 @@ import { ExtractedKey } from '../keys';
 import {
   getFirstOrNull,
   evaluateIfConfident,
-  referencesImport,
+  referencesImport
 } from './commons';
 import extractTFunction from './tFunction';
 
@@ -19,7 +19,7 @@ import extractTFunction from './tFunction';
  *   `useTranslation`
  */
 function isUseTranslationHook(
-  path: BabelCore.NodePath<BabelTypes.CallExpression>,
+  path: BabelCore.NodePath<BabelTypes.CallExpression>
 ): boolean {
   const callee = path.get('callee');
   return referencesImport(callee, 'react-i18next', 'useTranslation');
@@ -36,7 +36,7 @@ export default function extractUseTranslationHook(
   path: BabelCore.NodePath<BabelTypes.CallExpression>,
   config: Config,
   commentHints: CommentHint[] = [],
-  skipCheck = false,
+  skipCheck = false
 ): ExtractedKey[] {
   if (!skipCheck && !isUseTranslationHook(path)) return [];
 
@@ -71,15 +71,15 @@ export default function extractUseTranslationHook(
           reference.parentPath,
           config,
           commentHints,
-          true,
+          true
         ).map((k) => ({
           // Add namespace if it was not explicitely set in t() call.
           ...k,
           parsedOptions: {
             ...k.parsedOptions,
-            ns: k.parsedOptions.ns || ns,
-          },
-        })),
+            ns: k.parsedOptions.ns || ns
+          }
+        }))
       ];
     }
   }
@@ -87,6 +87,6 @@ export default function extractUseTranslationHook(
   return keys.map((k) => ({
     ...k,
     sourceNodes: [path.node, ...k.sourceNodes],
-    extractorName: extractUseTranslationHook.name,
+    extractorName: extractUseTranslationHook.name
   }));
 }

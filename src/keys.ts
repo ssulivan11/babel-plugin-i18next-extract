@@ -71,7 +71,7 @@ function parseExtractedKey(key: ExtractedKey, config: Config): TranslationKey {
     cleanKey,
     keyPath,
     ns,
-    isDerivedKey: false,
+    isDerivedKey: false
   };
 }
 
@@ -92,7 +92,7 @@ function parseExtractedKey(key: ExtractedKey, config: Config): TranslationKey {
 export function computeDerivedKeys(
   extractedKey: ExtractedKey,
   locale: string,
-  config: Config,
+  config: Config
 ): TranslationKey[] {
   const translationKey = parseExtractedKey(extractedKey, config);
   const { parsedOptions, cleanKey: key } = translationKey;
@@ -110,7 +110,7 @@ export function computeDerivedKeys(
       return {
         ...translationKey,
         cleanKey: key + config.contextSeparator + v,
-        isDerivedKey: true,
+        isDerivedKey: true
       };
     });
   }
@@ -125,15 +125,15 @@ export function computeDerivedKeys(
 
     if (config.enableExperimentalIcu) {
       const pluralNumbersAsText = Array.from<string>(
-        new Set(pluralRule.numbers.map(pluralNumberToText)),
+        new Set(pluralRule.numbers.map(pluralNumberToText))
       );
 
       const icuPlurals = pluralNumbersAsText
         .map(
           (numAsText: string) =>
             `${numAsText} {${icuPluralValue(
-              extractedKey.parsedOptions.defaultValue,
-            )}}`,
+              extractedKey.parsedOptions.defaultValue
+            )}}`
         )
         .join(' ');
 
@@ -143,7 +143,7 @@ export function computeDerivedKeys(
         keys = keys.map((k) => ({
           ...k,
           cleanKey: k.cleanKey + config.pluralSeparator + '0',
-          isDerivedKey: true,
+          isDerivedKey: true
         }));
       } else if (numberOfPlurals === 2) {
         keys = keys.reduce(
@@ -153,10 +153,10 @@ export function computeDerivedKeys(
             {
               ...k,
               cleanKey: k.cleanKey + config.pluralSeparator + 'plural',
-              isDerivedKey: true,
-            },
+              isDerivedKey: true
+            }
           ],
-          Array<TranslationKey>(),
+          Array<TranslationKey>()
         );
       } else {
         keys = keys.reduce(
@@ -167,10 +167,10 @@ export function computeDerivedKeys(
               .map((_, idx) => ({
                 ...k,
                 cleanKey: k.cleanKey + config.pluralSeparator + idx,
-                isDerivedKey: true,
-              })),
+                isDerivedKey: true
+              }))
           ],
-          Array<TranslationKey>(),
+          Array<TranslationKey>()
         );
       }
     }

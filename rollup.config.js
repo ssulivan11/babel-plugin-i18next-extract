@@ -7,25 +7,25 @@ const extensions = ['.js', '.ts'];
 
 export default {
   input: {
-    index: 'src/index.ts',
+    index: 'src/index.ts'
   },
   output: [
     {
       dir: 'lib/',
       format: 'cjs',
-      exports: 'named',
+      exports: 'named'
     },
     {
       dir: 'lib/es/',
       format: 'es',
-      exports: 'named',
-    },
+      exports: 'named'
+    }
   ],
   external: [
     'fs',
     'path',
     ...Object.keys(pkg.dependencies || {}),
-    ...Object.keys(pkg.peerDependencies || {}),
+    ...Object.keys(pkg.peerDependencies || {})
   ],
   plugins: [
     resolve({ extensions }),
@@ -33,7 +33,7 @@ export default {
       include: 'src/**/*',
       exclude: 'node_modules/**',
       babelHelpers: 'bundled',
-      extensions,
-    }),
-  ],
+      extensions
+    })
+  ]
 };

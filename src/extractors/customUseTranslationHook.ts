@@ -18,14 +18,14 @@ import extractUseTranslationHook from './useTranslationHook';
 export default function extractCustomUseTranslationHook(
   path: BabelCore.NodePath<BabelTypes.CallExpression>,
   config: Config,
-  commentHints: CommentHint[] = [],
+  commentHints: CommentHint[] = []
 ): ExtractedKey[] {
   if (getCommentHintForPath(path, 'DISABLE', commentHints)) return [];
   if (
     !isCustomImportedNode(
       config.cache.absoluteCustomHooks,
       path,
-      path.get('callee'),
+      path.get('callee')
     )
   ) {
     return [];

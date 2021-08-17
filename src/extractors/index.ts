@@ -23,7 +23,7 @@ export const EXTRACTORS_PRIORITIES = [
   extractTranslationRenderProp.name,
   extractWithTranslationHOC.name,
   extractI18nextInstance.name,
-  extractTFunction.name,
+  extractTFunction.name
 ];
 
 export default {
@@ -35,5 +35,5 @@ export default {
   extractTranslationRenderProp,
   extractWithTranslationHOC,
   extractI18nextInstance,
-  extractTFunction,
+  extractTFunction
 };

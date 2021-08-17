@@ -4,7 +4,7 @@ import * as BabelTypes from '@babel/types';
 import {
   COMMENT_HINTS_KEYWORDS,
   getCommentHintForPath,
-  CommentHint,
+  CommentHint
 } from '../comments';
 import { Config } from '../config';
 import { ExtractedKey } from '../keys';
@@ -18,7 +18,7 @@ import {
   iterateObjectExpression,
   referencesImport,
   parseI18NextOptionsFromCommentHints,
-  resolveIdentifier,
+  resolveIdentifier
 } from './commons';
 
 /**
@@ -27,13 +27,13 @@ import {
  * @returns true if the given element is indeed a `Trans` component.
  */
 function isTransComponent(
-  path: BabelCore.NodePath<BabelTypes.JSXElement>,
+  path: BabelCore.NodePath<BabelTypes.JSXElement>
 ): boolean {
   const openingElement = path.get('openingElement');
   return referencesImport(
     openingElement.get('name'),
     'react-i18next',
-    'Trans',
+    'Trans'
   );
 }
 
@@ -45,13 +45,13 @@ function isTransComponent(
  */
 function parseTransComponentOptions(
   path: BabelCore.NodePath<BabelTypes.JSXElement>,
-  commentHints: CommentHint[],
+  commentHints: CommentHint[]
 ): ExtractedKey['parsedOptions'] {
   const res: ExtractedKey['parsedOptions'] = {
     contexts: false,
     hasCount: false,
     ns: null,
-    defaultValue: null,
+    defaultValue: null
   };
 
   const countAttr = findJSXAttributeByName(path, 'count');
@@ -72,7 +72,7 @@ function parseTransComponentOptions(
   const nsAttr = findJSXAttributeByName(path, 'ns');
   if (nsAttr) {
     let value: BabelCore.NodePath<BabelTypes.Node | null> = nsAttr.get(
-      'value',
+      'value'
     );
     if (value.isJSXExpressionContainer()) value = value.get('expression');
     res.ns = getFirstOrNull(evaluateIfConfident(value));
@@ -81,7 +81,7 @@ function parseTransComponentOptions(
   const defaultsAttr = findJSXAttributeByName(path, 'defaults');
   if (defaultsAttr) {
     let value: BabelCore.NodePath<BabelTypes.Node | null> = defaultsAttr.get(
-      'value',
+      'value'
     );
     if (value.isJSXExpressionContainer()) value = value.get('expression');
     res.defaultValue = evaluateIfConfident(value);
@@ -89,7 +89,7 @@ function parseTransComponentOptions(
 
   return {
     ...res,
-    ...parseI18NextOptionsFromCommentHints(path, commentHints),
+    ...parseI18NextOptionsFromCommentHints(path, commentHints)
   };
 }
 
@@ -102,14 +102,14 @@ function parseTransComponentOptions(
  *   evaluable.
  */
 function parseTransComponentKeyFromAttributes(
-  path: BabelCore.NodePath<BabelTypes.JSXElement>,
+  path: BabelCore.NodePath<BabelTypes.JSXElement>
 ): string | null {
   const error = new ExtractionError(
     `Couldn't evaluate i18next key in Trans component. You should either ` +
       `make the i18nKey attribute evaluable or skip the line using a skip ` +
       `comment (/* ${COMMENT_HINTS_KEYWORDS.DISABLE.LINE} */ or /* ` +
       `${COMMENT_HINTS_KEYWORDS.DISABLE.NEXT_LINE} */).`,
-    path,
+    path
   );
 
   const keyAttribute = findJSXAttributeByName(path, 'i18nKey');
@@ -119,7 +119,7 @@ function parseTransComponentKeyFromAttributes(
   const keyEvaluation = evaluateIfConfident(
     keyAttributeValue.isJSXExpressionContainer()
       ? keyAttributeValue.get('expression')
-      : keyAttributeValue,
+      : keyAttributeValue
   );
 
   if (typeof keyEvaluation !== 'string') {
@@ -139,7 +139,7 @@ function parseTransComponentKeyFromAttributes(
  * @returns whether the node has nested children
  */
 function hasChildren(
-  path: BabelCore.NodePath<BabelTypes.JSXElement>,
+  path: BabelCore.NodePath<BabelTypes.JSXElement>
 ): boolean {
   const children = path.get('children').filter((path) => {
     // Filter out empty JSX expression containers
@@ -194,7 +194,7 @@ function hasChildren(
 function formatJSXElementKey(
   path: BabelCore.NodePath<BabelTypes.JSXElement>,
   index: number,
-  config: Config,
+  config: Config
 ): string {
   const openingElement = path.get('openingElement');
   const closingElement = path.get('closingElement');
@@ -219,7 +219,7 @@ function formatJSXElementKey(
   // it's nested. let's recurse.
   return `<${resultTagName}>${parseTransComponentKeyFromChildren(
     path,
-    config,
+    config
   )}</${resultTagName}>`;
 }
 
@@ -232,7 +232,7 @@ function formatJSXElementKey(
  */
 function parseTransComponentKeyFromChildren(
   path: BabelCore.NodePath<BabelTypes.JSXElement>,
-  config: Config,
+  config: Config
 ): string {
   const transComponentExtractionError = new ExtractionError(
     `Couldn't evaluate i18next key in Trans component. You should either ` +
@@ -240,7 +240,7 @@ function parseTransComponentKeyFromChildren(
       `component content evaluable or skip the line using a skip comment ` +
       `(/* ${COMMENT_HINTS_KEYWORDS.DISABLE.LINE} */ or /* ` +
       `${COMMENT_HINTS_KEYWORDS.DISABLE.NEXT_LINE} */).`,
-    path,
+    path
   );
 
   let children = path.get('children');
@@ -348,17 +348,17 @@ export default function extractTransComponent(
   path: BabelCore.NodePath<BabelTypes.JSXElement>,
   config: Config,
   commentHints: CommentHint[] = [],
-  skipCheck = false,
+  skipCheck = false
 ): ExtractedKey[] {
   if (getCommentHintForPath(path, 'DISABLE', commentHints)) return [];
   if (!skipCheck && !isTransComponent(path)) return [];
 
   const keyEvaluationFromAttribute = parseTransComponentKeyFromAttributes(
-    path,
+    path
   );
   const keyEvaluationFromChildren = parseTransComponentKeyFromChildren(
     path,
-    config,
+    config
   );
 
   const parsedOptions = parseTransComponentOptions(path, commentHints);
@@ -371,7 +371,7 @@ export default function extractTransComponent(
       key: keyEvaluationFromAttribute || keyEvaluationFromChildren,
       parsedOptions,
       sourceNodes: [path.node],
-      extractorName: extractTransComponent.name,
-    },
+      extractorName: extractTransComponent.name
+    }
   ];
 }

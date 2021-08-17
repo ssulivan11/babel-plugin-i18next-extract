@@ -8,7 +8,7 @@ import { ExtractedKey } from '../keys';
 import {
   getFirstOrNull,
   evaluateIfConfident,
-  referencesChildIdentifier,
+  referencesChildIdentifier
 } from './commons';
 import extractTFunction from './tFunction';
 
@@ -22,14 +22,14 @@ import extractTFunction from './tFunction';
  */
 function isGetFixedTFunction(
   path: BabelCore.NodePath<BabelTypes.CallExpression>,
-  config: Config,
+  config: Config
 ): boolean {
   const callee = path.get('callee');
 
   return referencesChildIdentifier(
     callee,
     config.i18nextInstanceNames,
-    'getFixedT',
+    'getFixedT'
   );
 }
 
@@ -43,7 +43,7 @@ function isGetFixedTFunction(
 export default function extractGetFixedTFunction(
   path: BabelCore.NodePath<BabelTypes.CallExpression>,
   config: Config,
-  commentHints: CommentHint[] = [],
+  commentHints: CommentHint[] = []
 ): ExtractedKey[] {
   if (!isGetFixedTFunction(path, config)) return [];
 
@@ -79,15 +79,15 @@ export default function extractGetFixedTFunction(
           reference.parentPath,
           config,
           commentHints,
-          true,
+          true
         ).map((k) => ({
           // Add namespace if it was not explicitely set in t() call.
           ...k,
           parsedOptions: {
             ...k.parsedOptions,
-            ns: k.parsedOptions.ns || ns,
-          },
-        })),
+            ns: k.parsedOptions.ns || ns
+          }
+        }))
       ];
     }
   }
@@ -95,6 +95,6 @@ export default function extractGetFixedTFunction(
   return keys.map((k) => ({
     ...k,
     sourceNodes: [path.node, ...k.sourceNodes],
-    extractorName: extractGetFixedTFunction.name,
+    extractorName: extractGetFixedTFunction.name
   }));
 }
