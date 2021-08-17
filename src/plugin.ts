@@ -95,10 +95,11 @@ function handleExtraction<T>(
     const lineNumber =
       (err.nodePath.node.loc && err.nodePath.node.loc.start.line) || '???';
     // eslint-disable-next-line no-console
-    console.warn(
+    console.error(
       `${PLUGIN_NAME}: Extraction error in ${filename} at line ` +
-        `${lineNumber}. ${err.message}`,
+        `${lineNumber}. ${err.message}\n\nYou must use string contexts instead of variable objects.\nhttps://i18next-extract.netlify.app/#/configuration?id=defaultcontexts`,
     );
+    process.exit(1)
   }
 }
 
