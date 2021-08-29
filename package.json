@@ -34,6 +34,7 @@
   "dependencies": {
     "@babel/core": "^7.12.3",
     "@babel/types": "7.9.6",
+    "chalk": "^4.1.2",
     "deepmerge": "^4.2.2",
     "i18next": "^19.8.3",
     "json-stable-stringify": "^1.0.1"

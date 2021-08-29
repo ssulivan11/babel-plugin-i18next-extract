@@ -1,5 +1,6 @@
 import * as BabelCore from '@babel/core';
 import * as BabelTypes from '@babel/types';
+import chalk from 'chalk';
 
 import { parseCommentHints, CommentHint } from './comments';
 import { Config, parseConfig } from './config';
@@ -96,8 +97,14 @@ function handleExtraction<T>(
       (err.nodePath.node.loc && err.nodePath.node.loc.start.line) || '???';
     // eslint-disable-next-line no-console
     console.error(
-      `${PLUGIN_NAME}: Extraction error in ${filename} at line ` +
-        `${lineNumber}. ${err.message}\n\nYou must use string contexts instead of variable objects.\nhttps://i18next-extract.netlify.app/#/configuration?id=defaultcontexts`
+      // eslint-disable-next-line prettier/prettier
+      `${PLUGIN_NAME}: ${chalk.red(
+        'Extraction error'
+      )}\n${filename} at line${lineNumber}\n${
+        err.message
+      }\n\n> You must use string contexts instead of variable objects.\n${chalk.blue(
+        'https://i18next-extract.netlify.app/#/configuration?id=defaultcontexts'
+      )}`
     );
     process.exit(1);
   }
